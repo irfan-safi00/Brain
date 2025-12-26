@@ -171,3 +171,23 @@ body {
 
 /* --- Scannability Helpers --- */
 .hidden { display: none; }
+
+
+
+/* Memory Game Grid */
+.memory-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 1rem;
+}
+.memory-tile {
+    aspect-ratio: 1;
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.tile-active { background: #6366f1 !important; box-shadow: 0 0 15px #6366f1; }
+.exit-link { margin-top: 1.5rem; background: transparent; border: none; color: #71717a; cursor: pointer; width: 100%; font-weight: 700; }
+
