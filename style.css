@@ -1,12 +1,13 @@
-/* --- Root Variables & Reset --- */
+/* --- System Variables --- */
 :root {
-    --bg: #0a0a0c;
-    --card: rgba(255, 255, 255, 0.05);
-    --accent: #6366f1; /* Indigo */
-    --white: #ffffff;
-    --dim: #a1a1aa;
-    --green: #22c55e;
-    --red: #ef4444;
+    --bg: #030305;
+    --accent: #818cf8; /* Neural Indigo */
+    --neon: #22d3ee;   /* Logic Cyan */
+    --white: #f8fafc;
+    --dim: #64748b;
+    --glass: rgba(255, 255, 255, 0.03);
+    --border: rgba(255, 255, 255, 0.08);
+    --error: #ef4444;
 }
 
 * {
@@ -16,165 +17,215 @@
 }
 
 body {
+    font-family: 'Outfit', sans-serif;
     background-color: var(--bg);
     color: var(--white);
-    font-family: 'Outfit', sans-serif;
     display: flex;
     justify-content: center;
     min-height: 100vh;
-    padding: 20px;
+    padding: 15px;
+    line-height: 1.5;
 }
 
 .container {
     width: 100%;
-    max-width: 440px;
+    max-width: 460px;
 }
 
-/* --- Reusable Components --- */
-.glass {
-    background: var(--card);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 28px;
-    padding: 30px;
-    text-align: center;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-}
-
-.white-text { color: var(--white) !important; }
-.accent-text { color: var(--accent) !important; }
-.text-dim { color: var(--dim); font-size: 0.85rem; }
-
-.hidden { display: none !important; }
-
-/* --- Input & Buttons --- */
-.input-field {
-    width: 100%;
-    background: #000;
-    border: 2px solid var(--accent);
-    padding: 15px;
-    border-radius: 14px;
-    color: var(--white);
-    font-size: 1.3rem;
-    text-align: center;
-    margin-bottom: 20px;
-    outline: none;
-}
-
-.btn {
-    background: var(--accent);
-    color: var(--white);
-    border: none;
-    padding: 16px;
-    border-radius: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    width: 100%;
-    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4); }
-
-/* --- HUD & Goal Tracker --- */
-.hud-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* --- HUD & Metrics --- */
+.hud {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    background: var(--glass);
+    padding: 20px;
+    border-radius: 24px;
+    border: 1px solid var(--border);
     margin-bottom: 25px;
-    padding: 0 10px;
 }
 
-.goal-box {
-    background: rgba(255,255,255,0.03);
-    padding: 15px;
-    border-radius: 15px;
-    margin-bottom: 20px;
+.label {
+    font-size: 0.65rem;
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
 }
 
-.progress-bg {
+.value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--neon);
+}
+
+.load-container {
+    grid-column: span 2;
+    margin-top: 10px;
+}
+
+.load-bar {
     width: 100%;
-    height: 8px;
-    background: rgba(255,255,255,0.1);
+    height: 6px;
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
+    margin-top: 8px;
     overflow: hidden;
 }
 
-.progress-fill {
-    width: 0%;
+.load-fill {
     height: 100%;
-    background: var(--green);
-    transition: width 0.5s ease;
+    background: linear-gradient(90deg, var(--accent), var(--neon));
+    width: 0%;
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 0 15px var(--accent);
 }
 
-/* --- Game Cards --- */
-.grid { display: grid; gap: 15px; }
+/* --- Module Grid --- */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Default for mobile */
+    gap: 12px;
+}
+
+/* Desktop Expansion */
+@media (min-width: 400px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+}
 
 .card {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 18px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    padding: 20px 15px;
     border-radius: 22px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
     cursor: pointer;
-    transition: 0.2s;
+    position: relative;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 110px;
 }
 
 .card:hover {
     border-color: var(--accent);
-    background: rgba(99, 102, 241, 0.12);
-    transform: scale(1.02);
+    background: rgba(129, 140, 248, 0.08);
+    transform: translateY(-4px);
 }
 
-.emoji { font-size: 1.5rem; }
+.card b {
+    font-size: 0.95rem;
+    color: var(--white);
+    margin-top: 5px;
+}
+
+.card small {
+    font-size: 0.7rem;
+    color: var(--dim);
+}
 
 .tag {
-    font-size: 0.6rem;
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-size: 0.55rem;
     background: var(--accent);
-    color: white;
-    padding: 2px 8px;
+    color: #000;
+    padding: 2px 6px;
     border-radius: 5px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+}
+
+/* --- Training Panel --- */
+.glass-panel {
+    background: rgba(10, 10, 15, 0.8);
+    backdrop-filter: blur(25px);
+    border: 1px solid var(--border);
+    border-radius: 35px;
+    padding: 40px 20px;
+    text-align: center;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.9);
+}
+
+.input-field {
+    width: 100%;
+    background: #000;
+    border: 2px solid var(--accent);
+    padding: 18px;
+    border-radius: 18px;
+    color: var(--white);
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 25px;
+    outline: none;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.btn {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 20px;
+    border-radius: 18px;
     font-weight: 800;
-    margin-left: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    transition: 0.2s;
     text-transform: uppercase;
 }
 
-/* --- Memory Game Logic --- */
-.memory-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0; }
-.tile { aspect-ratio: 1; background: rgba(255,255,255,0.1); border-radius: 12px; cursor: pointer; }
-.active-tile { background: var(--white) !important; box-shadow: 0 0 25px var(--white); }
+.btn:active { transform: scale(0.95); }
 
-/* --- Terminal --- */
-.terminal {
-    background: #000;
-    border: 1px solid #333;
-    border-radius: 18px;
-    padding: 15px;
-    margin-top: 25px;
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--green);
+/* --- Memory & Interactive Elements --- */
+.memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 25px 0;
 }
 
-.terminal-header { font-size: 0.7rem; margin-bottom: 10px; border-bottom: 1px solid #222; padding-bottom: 5px; }
-
-.leader-entry {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    padding: 5px 0;
-    border-bottom: 1px solid #111;
-}
-
-/* --- Game Area --- */
-.exit-btn {
-    background: none;
-    border: 1px solid var(--red);
-    color: var(--red);
-    padding: 10px;
+.tile {
+    aspect-ratio: 1;
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
     cursor: pointer;
-    width: 100%;
-    margin-top: 25px;
-    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.active-tile {
+    background: var(--white) !important;
+    box-shadow: 0 0 20px var(--white);
+}
+
+/* --- Utility --- */
+.hidden { display: none !important; }
+
+.footer {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.reset-btn {
+    background: none;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: var(--error);
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+}
+
+.abort-btn {
+    background: none;
+    border: none;
+    color: var(--dim);
+    margin-top: 30px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-decoration: underline;
 }
