@@ -3,90 +3,340 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neural OS | Cognitive Lab</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Neural OS | Zenith v6.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* --- CORE STYLING (BENTO UX) --- */
+        :root {
+            --bg: #030305;
+            --card: rgba(255, 255, 255, 0.03);
+            --accent: #8b5cf6; /* Neural Purple */
+            --cyan: #22d3ee;
+            --white: #f8fafc;
+            --border: rgba(255, 255, 255, 0.08);
+            --success: #10b981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg);
+            color: var(--white);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .glow-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% -20%, #1e1b4b 0%, #030305 80%);
+            z-index: -1;
+        }
+
+        .app-shell { width: 100%; max-width: 480px; padding: 20px; }
+
+        /* --- BENTO HUD --- */
+        .bento-hud {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-main {
+            grid-column: span 2;
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 28px;
+            text-align: center;
+        }
+
+        .value { font-family: 'JetBrains Mono'; font-size: 2.5rem; color: var(--cyan); font-weight: 700; }
+        label { font-size: 0.65rem; letter-spacing: 2px; color: #64748b; font-weight: 700; display: block; margin-bottom: 5px; }
+
+        .neural-load {
+            grid-column: span 2;
+            background: rgba(255,255,255,0.02);
+            height: 40px;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+        }
+
+        .load-fill {
+            position: absolute; left: 0; top: 0; height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--cyan));
+            width: 0%; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0.4;
+        }
+
+        /* --- BENTO GRID --- */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .bento-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: 0.2s cubic-bezier(0.2, 0, 0, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 140px;
+        }
+
+        .bento-card:hover { transform: translateY(-4px); border-color: var(--accent); background: rgba(139, 92, 246, 0.05); }
+        .bento-card:active { transform: scale(0.95); }
+
+        .featured { grid-column: span 2; flex-direction: row; align-items: center; min-height: 100px; }
+        
+        .card-icon { font-size: 1.8rem; margin-bottom: 10px; }
+        .featured .card-icon { margin-bottom: 0; margin-right: 15px; }
+        
+        b { display: block; font-size: 0.95rem; }
+        small { color: #64748b; font-size: 0.75rem; }
+
+        .tag {
+            background: var(--accent); color: #fff; font-size: 0.55rem;
+            padding: 2px 8px; border-radius: 20px; font-weight: 800; align-self: flex-start;
+        }
+
+        /* --- TRAINING STAGE --- */
+        .game-viewport {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 3, 5, 0.98);
+            backdrop-filter: blur(15px);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+        }
+
+        .viewport-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .viewport-header button { background: none; border: none; color: #64748b; font-weight: 700; cursor: pointer; }
+
+        #stage-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+
+        .hidden { display: none !important; }
+
+        /* Game UI Components */
+        .n-btn { 
+            background: var(--white); color: #000; border: none; padding: 18px 30px; 
+            border-radius: 16px; font-weight: 700; font-size: 1rem; width: 100%; cursor: pointer;
+        }
+        .n-input {
+            background: transparent; border: none; border-bottom: 2px solid var(--accent);
+            color: var(--white); font-size: 3rem; width: 100%; text-align: center; 
+            outline: none; margin-bottom: 30px; font-family: 'JetBrains Mono';
+        }
+    </style>
 </head>
 <body>
+    <div class="glow-bg"></div>
 
-<div class="container">
-    <header class="hud">
-        <div class="metric">
-            <span class="label">Neural Level</span><br>
-            <span class="value" id="lvl-display">1</span>
-        </div>
-        <div class="metric" style="text-align: right;">
-            <span class="label">Total XP</span><br>
-            <span class="value" id="xp-display">0</span>
-        </div>
-        <div class="load-container">
-            <span class="label">Neural Load (Complexity Index)</span>
-            <div class="load-bar">
-                <div id="load-fill" class="load-fill"></div>
+    <div class="app-shell">
+        <header class="bento-hud">
+            <div class="stat-main">
+                <label>SYNAPTIC SCORE</label>
+                <div class="value" id="xp-val">0</div>
             </div>
-        </div>
-    </header>
+            <div class="neural-load">
+                <div class="load-fill" id="load-bar"></div>
+                <small style="position:relative; z-index:1; font-weight: 700;">NEURAL LOAD</small>
+            </div>
+        </header>
 
-    <main id="hub-scr">
-        <div class="grid">
-            <div class="card" onclick="gym.startMath()">
-                <span class="tag">LOGIC</span>
-                <b>Math Sprint</b>
-                <small>Parietal Lobe</small>
+        <main class="bento-grid" id="hub-scr">
+            <div class="bento-card featured" onclick="gym.startNose()">
+                <div class="card-icon">👃🏼</div>
+                <div class="card-info">
+                    <b>Scent Logic</b>
+                    <small>Inductive Pattern Mapping</small>
+                </div>
+                <span class="tag">NEW</span>
             </div>
-            <div class="card" onclick="gym.startWord()">
-                <span class="tag">VOCAB</span>
-                <b>Word Recall</b>
-                <small>Temporal Lobe</small>
-            </div>
-            <div class="card" onclick="gym.startMem()">
-                <span class="tag">MEM</span>
-                <b>Pattern Focus</b>
-                <small>Spatial Span</small>
-            </div>
-            <div class="card" onclick="gym.startReact()">
-                <span class="tag">SPEED</span>
-                <b>Reaction</b>
-                <small>Cerebellum</small>
-            </div>
-            <div class="card" onclick="gym.startStroop()">
-                <span class="tag">EXEC</span>
-                <b>Color Logic</b>
-                <small>Prefrontal Cortex</small>
-            </div>
-            <div class="card" onclick="gym.startShapes()">
-                <span class="tag">VISUAL</span>
-                <b>Shape Match</b>
-                <small>Occipital Lobe</small>
-            </div>
-            <div class="card" onclick="gym.startSequence()">
-                <span class="tag">PATTRN</span>
-                <b>Sequence</b>
-                <small>Prefrontal Analysis</small>
-            </div>
-            <div class="card" onclick="gym.startGrid()">
-                <span class="tag">SPACE</span>
-                <b>Grid Scan</b>
-                <small>Parietal-Prefrontal</small>
-            </div>
-            <div class="card" onclick="gym.startDigits()">
-                <span class="tag">AUDIT</span>
-                <b>Digit Span</b>
-                <small>Sequential Memory</small>
-            </div>
-        </div>
 
-        <footer class="footer">
-            <button class="reset-btn" onclick="gym.reset()">WIPE NEURAL CORE (RESET)</button>
-        </footer>
-    </main>
-
-    <section id="game-scr" class="glass-panel hidden">
-        <div id="content">
+            <div class="bento-card" onclick="gym.startCards()">
+                <div class="card-icon">🃏</div>
+                <div class="card-info">
+                    <b>Card Shift</b>
+                    <small>Executive Focus</small>
+                </div>
             </div>
-        <button class="abort-btn" onclick="gym.exit()">ABORT TRAINING SESSION</button>
-    </section>
-</div>
 
-<script src="script.js"></script>
+            <div class="bento-card" onclick="gym.startMath()">
+                <div class="card-icon">➗</div>
+                <div class="card-info">
+                    <b>Math Sprint</b>
+                    <small>Quantitative Speed</small>
+                </div>
+            </div>
+
+            <div class="bento-card" onclick="gym.startDigits()">
+                <div class="card-icon">🔢</div>
+                <div class="card-info">
+                    <b>Digit Loop</b>
+                    <small>Phonological Memory</small>
+                </div>
+            </div>
+
+            <div class="bento-card" onclick="gym.startShapes()">
+                <div class="card-icon">💠</div>
+                <div class="card-info">
+                    <b>Visual Logic</b>
+                    <small>Spatial Awareness</small>
+                </div>
+            </div>
+        </main>
+
+        <section id="game-scr" class="game-viewport hidden">
+            <div class="viewport-header">
+                <button onclick="gym.exit()">✕ TERMINATE</button>
+                <div id="game-timer" style="color:var(--cyan); font-family: 'JetBrains Mono';">LEVEL 1</div>
+            </div>
+            <div id="stage-content"></div>
+        </section>
+    </div>
+
+    <script>
+        const gym = {
+            xp: parseInt(localStorage.getItem('zenith_xp')) || 0,
+            get lvl() { return Math.floor(this.xp / 500) + 1; },
+
+            init() { this.render(); },
+
+            render() {
+                document.getElementById('xp-val').innerText = this.xp;
+                document.getElementById('load-bar').style.width = Math.min(100, (this.lvl * 10)) + "%";
+                localStorage.setItem('zenith_xp', this.xp);
+            },
+
+            show(id) {
+                document.getElementById('hub-scr').classList.toggle('hidden', id !== 'hub-scr');
+                document.getElementById('game-scr').classList.toggle('hidden', id !== 'game-scr');
+            },
+
+            exit() { this.show('hub-scr'); this.render(); },
+            addXp(v) { this.xp += (v * this.lvl); this.render(); },
+
+            // --- NOSE GAME (INDUCTIVE LOGIC) ---
+            startNose() {
+                this.show('game-scr');
+                const sets = [
+                    {s: ["🌲", "🌲", "🪵", "👃🏼"], a: "🔥", h: "State Change: Fire"},
+                    {s: ["🍋", "🍋", "🍋", "👃🏼"], a: "🍋", h: "Consistency"},
+                    {s: ["🌸", "🐝", "🍯", "👃🏼"], a: "🥞", h: "Functional Association"},
+                    {s: ["☕", "💨", "🔥", "👃🏼"], a: "🧊", h: "Thermal Opposites"}
+                ];
+                let round = sets[Math.floor(Math.random() * sets.length)];
+                document.getElementById('stage-content').innerHTML = `
+                    <label>IDENTIFY LOGICAL SCENT CONCLUSION</label>
+                    <div style="font-size:3rem; margin:20px 0; letter-spacing:10px;">${round.s.join('')}</div>
+                    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; width:100%;">
+                        ${["🔥", "🍋", "🥞", "🧊", "🌊", "🌬️"].map(emoji => `
+                            <button class="n-btn" style="font-size:2rem; background:var(--card); color:#fff;" onclick="gym.cNose('${emoji}', '${round.a}')">${emoji}</button>
+                        `).join('')}
+                    </div>
+                `;
+            },
+            cNose(g, a) { if(g === a) { this.addXp(50); this.startNose(); } else this.exit(); },
+
+            // --- CARD SHIFT (EXECUTIVE FUNCTION) ---
+            startCards() {
+                this.show('game-scr');
+                const rules = ['COLOR', 'SHAPE'];
+                const rule = rules[Math.floor(Math.random() * 2)];
+                const cards = [
+                    {id: 1, c: 'RED', s: '♦️', h: '#ef4444'},
+                    {id: 2, c: 'BLUE', s: '♦️', h: '#3b82f6'},
+                    {id: 3, c: 'RED', s: '♣️', h: '#ef4444'}
+                ];
+                let target = cards[0];
+                let options = [cards[1], cards[2]].sort(() => Math.random() - 0.5);
+
+                document.getElementById('stage-content').innerHTML = `
+                    <label>MATCH BY: ${rule}</label>
+                    <div style="font-size:4rem; padding:40px; border:2px solid ${target.h}; border-radius:20px; margin-bottom:30px;">${target.s}</div>
+                    <div style="display:flex; gap:20px; width:100%;">
+                        ${options.map(opt => `
+                            <button class="n-btn" style="background:var(--card); color:#fff; border:1px solid ${opt.h}" onclick="gym.cCards('${rule}', '${opt.id}')">
+                                <span style="font-size:2rem">${opt.s}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            },
+            cCards(rule, id) {
+                // Rule logic: Match by Color (Target 1 & 3) or Shape (Target 1 & 2)
+                const win = (rule === 'COLOR' && id == 3) || (rule === 'SHAPE' && id == 2);
+                if(win) { this.addXp(40); this.startCards(); } else this.exit();
+            },
+
+            // --- MATH SPRINT ---
+            startMath() {
+                this.show('game-scr');
+                let a = Math.floor(Math.random() * (10 * this.lvl)) + 2;
+                let b = Math.floor(Math.random() * (5 * this.lvl)) + 2;
+                let ans = a + b;
+                document.getElementById('stage-content').innerHTML = `
+                    <label>QUANTITATIVE PROCESSING</label>
+                    <div style="font-size:4rem; font-weight:700; margin-bottom:20px;">${a} + ${b}</div>
+                    <input type="number" id="m-ans" class="n-input" autofocus>
+                    <button class="n-btn" onclick="gym.cMath(${ans})">VERIFY INPUT</button>
+                `;
+            },
+            cMath(a) { if(document.getElementById('m-ans').value == a) { this.addXp(20); this.startMath(); } else this.exit(); },
+
+            // --- DIGIT LOOP ---
+            startDigits() {
+                this.show('game-scr');
+                let seq = ""; for(let i=0; i<3+Math.floor(this.lvl/2); i++) seq += Math.floor(Math.random()*10);
+                document.getElementById('stage-content').innerHTML = `<div id="d-box" style="font-size:5rem; font-family:'JetBrains Mono';">...</div>`;
+                let i = 0;
+                let t = setInterval(() => {
+                    document.getElementById('d-box').innerText = seq[i];
+                    setTimeout(() => { if(document.getElementById('d-box')) document.getElementById('d-box').innerText = ""; }, 400);
+                    i++;
+                    if(i > seq.length) {
+                        clearInterval(t);
+                        document.getElementById('stage-content').innerHTML = `
+                            <label>RECALL SEQUENCE</label>
+                            <input type="number" id="d-ans" class="n-input" placeholder="0000">
+                            <button class="n-btn" onclick="gym.cDigits('${seq}')">VALIDATE</button>
+                        `;
+                    }
+                }, 1000);
+            },
+            cDigits(a) { if(document.getElementById('d-ans').value == a) { this.addXp(60); this.startDigits(); } else this.exit(); },
+
+            // --- SHAPE LOGIC ---
+            startShapes() {
+                this.show('game-scr');
+                const shapes = ["💠", "🌀", "⬢", "▲", "◼️"];
+                let target = shapes[Math.floor(Math.random()*shapes.length)];
+                document.getElementById('stage-content').innerHTML = `
+                    <label>VISUAL RECOGNITION</label>
+                    <div style="font-size:6rem; margin:20px 0;">${target}</div>
+                    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; width:100%;">
+                        ${shapes.sort(()=>.5-Math.random()).map(s => `<button class="n-btn" style="background:var(--card); color:#fff; font-size:1.5rem;" onclick="gym.cShape('${s}','${target}')">${s}</button>`).join('')}
+                    </div>
+                `;
+            },
+            cShape(g, t) { if(g === t) { this.addXp(15); this.startShapes(); } else this.exit(); }
+        };
+
+        gym.init();
+    </script>
 </body>
 </html>
