@@ -3,65 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cognitive Labs | Brain Gym</title>
+    <title>Cognitive Labs | Neural Network</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="login-gate" class="app-container">
-        <div class="glass-panel text-center">
-            <h1 style="font-size: 1.5rem; margin-bottom: 1rem;">DECRYPT ACCESS</h1>
-            <p style="color: #71717a; margin-bottom: 1.5rem;">Enter your pilot passcode to load neural data.</p>
-            <input type="password" id="pass-input" class="input-field" placeholder="••••">
-            <button onclick="handleLogin()" class="submit-btn">ACCESS CORE</button>
+    <div class="container">
+        <div id="login-scr" class="glass">
+            <h1 class="white-text">NEURAL ACCESS</h1>
+            <p class="text-dim">Reclaiming cognitive autonomy from AI.</p>
+            <input type="password" id="pass" class="input-field" placeholder="4-Digit PIN" maxlength="4">
+            <button class="btn" onclick="gym.login()">START TRAINING</button>
+            <p class="text-dim" style="font-size: 0.7rem; margin-top: 10px;">Your data is stored locally in this browser.</p>
         </div>
-    </div>
 
-    <div id="app-body" class="app-container hidden">
-        <header class="hud">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <div id="lvl-circle" class="level-badge">1</div>
-                <div>
-                    <p id="player-name" style="font-size: 0.7rem; font-weight: 700; color: #71717a;">NEURAL PILOT</p>
-                    <p id="rank-name" style="font-weight: 600;">Novice</p>
+        <div id="hub-scr" class="hidden">
+            <header class="hud-header">
+                <div class="pilot-info">
+                    <b id="p-name" class="white-text">Pilot</b><br>
+                    <span id="rank" class="text-dim">Rank: Novice</span>
                 </div>
-            </div>
-            <div style="text-align: right;">
-                <p style="font-size: 0.7rem; font-weight: 700; color: #71717a;">COGNITION XP</p>
-                <p id="total-xp" class="xp-text">0</p>
-            </div>
-        </header>
+                <div class="xp-info">
+                    <span class="text-dim">NEURAL XP</span><br>
+                    <b id="xp-val" class="accent-text">0</b>
+                </div>
+            </header>
 
-        <main id="main-console" class="glass-panel">
-            <div id="home-menu">
-                <div class="menu-grid">
-                    <button class="action-btn" onclick="startMathGame()">
-                        <span class="icon-box">🔢</span>
-                        <div><span class="btn-title">Math Sprint</span></div>
-                    </button>
-                    <button class="action-btn" onclick="startWordGame()">
-                        <span class="icon-box">🧠</span>
-                        <div><span class="btn-title">Word Decipher</span></div>
-                    </button>
-                    <button class="action-btn" onclick="startMemoryGame()">
-                        <span class="icon-box">👁️</span>
-                        <div><span class="btn-title">Pattern Recall</span></div>
-                    </button>
-                    
-                    <button onclick="toggleLeaderboard()" style="margin-top: 1rem; color: #6366f1;">📊 History</button>
+            <div class="goal-box">
+                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 5px;">
+                    <span>DAILY GOAL: 10 MINS</span>
+                    <span id="goal-percent">0%</span>
+                </div>
+                <div class="progress-bg">
+                    <div id="goal-bar" class="progress-fill"></div>
                 </div>
             </div>
 
-            <div id="game-screen" class="hidden">
-                <div id="game-content"></div>
-                <button onclick="exitGame()" class="exit-link">EXIT WORKOUT</button>
+            <div class="grid">
+                <div class="card" onclick="gym.startMath()">
+                    <span class="emoji">🔢</span>
+                    <div>
+                        <b class="white-text">Math Sprint</b><span class="tag">LOGIC</span>
+                        <p class="text-dim">Train: Parietal Lobe (Calculations)</p>
+                    </div>
+                </div>
+
+                <div class="card" onclick="gym.startWord()">
+                    <span class="emoji">🧠</span>
+                    <div>
+                        <b class="white-text">Word Recall</b><span class="tag">VOCAB</span>
+                        <p class="text-dim">Train: Temporal Lobe (Active Retrieval)</p>
+                    </div>
+                </div>
+
+                <div class="card" onclick="gym.startMem()">
+                    <span class="emoji">👁️</span>
+                    <div>
+                        <b class="white-text">Pattern Focus</b><span class="tag">MEMORY</span>
+                        <p class="text-dim">Train: Occipital (Spatial Chunks)</p>
+                    </div>
+                </div>
+
+                <div class="card" onclick="gym.startReact()">
+                    <span class="emoji">⚡</span>
+                    <div>
+                        <b class="white-text">Reaction</b><span class="tag">SPEED</span>
+                        <p class="text-dim">Train: Cerebellum (Processing Time)</p>
+                    </div>
+                </div>
+
+                <div class="card" onclick="gym.startStroop()">
+                    <span class="emoji">🌈</span>
+                    <div>
+                        <b class="white-text">Color Logic</b><span class="tag">CRITICAL</span>
+                        <p class="text-dim">Train: Prefrontal (Executive Control)</p>
+                    </div>
+                </div>
             </div>
-            
-            <div id="stats-screen" class="hidden">
-                <div id="stats-list"></div>
-                <button class="submit-btn" onclick="exitGame()">Back</button>
+
+            <div class="terminal">
+                <div class="terminal-header">> GLOBAL_LEADERBOARD_SYNC...</div>
+                <div id="leaderboard-data">
+                    </div>
             </div>
-        </main>
+        </div>
+
+        <div id="game-scr" class="glass hidden">
+            <div id="timer-display" class="text-dim" style="margin-bottom: 10px;">Session Active</div>
+            <div id="content">
+                </div>
+            <button class="exit-btn" onclick="gym.exit()">TERMINATE SESSION</button>
+        </div>
     </div>
 
     <script src="script.js"></script>
