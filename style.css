@@ -1,68 +1,177 @@
-:root {
-    --cyan: #00f2ff;
-    --pink: #ff00e5;
-    --dark: #050608;
-    --glass: rgba(255, 255, 255, 0.05);
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    background: var(--dark);
-    color: white;
-    font-family: 'Courier New', monospace;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #e0e0e0;
+    line-height: 1.6;
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    height: 100vh;
-    margin: 0;
 }
 
-.landing-ui {
+header {
     text-align: center;
-    max-width: 600px;
-}
-
-.lobby-cards {
-    display: flex;
-    gap: 2rem;
-    margin-top: 3rem;
-}
-
-.card {
-    background: var(--glass);
     padding: 2rem;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px;
-    backdrop-filter: blur(10px);
+    background: #0f3460;
+    width: 100%;
 }
 
-input {
-    background: rgba(0,0,0,0.5);
-    border: 1px solid var(--pink);
-    color: var(--pink);
-    padding: 10px;
-    width: 80%;
-    margin-bottom: 10px;
-    text-align: center;
-    outline: none;
+header h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    color: #00d4ff;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
 }
 
-.neon-btn {
-    padding: 12px 24px;
-    border: none;
+main {
+    flex: 1;
+    width: 100%;
+    max-width: 800px;
+    padding: 1rem;
+}
+
+section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(5px);
+}
+
+h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    color: #00d4ff;
+    margin-bottom: 1rem;
+}
+
+#game-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+#score-display, #level-display, #timer-display {
+    font-size: 1.2rem;
+    color: #00ff88;
+    text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+}
+
+.game-btn, .mode-btn {
+    padding: 0.8rem 1.5rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    border: 2px solid #00d4ff;
+    background: transparent;
+    color: #00d4ff;
+    border-radius: 5px;
     cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-    text-transform: uppercase;
+    transition: all 0.3s;
 }
 
-.blue { background: var(--cyan); box-shadow: 0 0 15px var(--cyan); }
-.pink { background: var(--pink); box-shadow: 0 0 15px var(--pink); }
+.game-btn:hover, .mode-btn:hover {
+    background: #00d4ff;
+    color: #1a1a2e;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+}
 
-.neon-btn:hover { transform: translateY(-3px); filter: brightness(1.2); }
+.grid {
+    display: grid;
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
+    margin: 1rem auto;
+}
 
-/* Coming Soon Section */
-.coming-soon {
-    margin-top: 50px;
-    opacity: 0.5;
-    font-size: 0.8rem;
+.node {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #e94560;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+}
+
+.node.active {
+    background: #00ff88;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.7);
+}
+
+.node.connected {
+    background: #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+}
+
+.node:hover {
+    transform: scale(1.1);
+}
+
+.connection {
+    position: absolute;
+    background: #00d4ff;
+    height: 4px;
+    transform-origin: left;
+    transition: width 0.3s;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+#message {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    color: #00ff88;
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.node {
+    animation: pulse 2s infinite;
+}
+
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .grid {
+        max-width: 300px;
+    }
+
+    .node {
+        font-size: 1rem;
+    }
+
+    .game-btn, .mode-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background: #0f3460;
+    width: 100%;
+    color: #00d4ff;
 }
