@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognitive Labs | Brain Gym</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <header class="hud">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div id="lvl-circle" class="level-badge">1</div>
+                <div>
+                    <p id="player-name" style="font-size: 0.7rem; font-weight: 700; color: #71717a; letter-spacing: 1px;">NEURAL PILOT</p>
+                    <p id="rank-name" style="font-weight: 600;">Novice</p>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <p style="font-size: 0.7rem; font-weight: 700; color: #71717a;">COGNITION XP</p>
+                <p id="total-xp" class="xp-text">0</p>
+            </div>
+        </header>
+
+        <main id="main-console" class="glass-panel">
+            
+            <div id="home-menu">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <h1 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">Daily Routine</h1>
+                    <p style="color: #71717a; font-size: 0.9rem;">Choose a module to begin growth.</p>
+                </div>
+
+                <div class="menu-grid">
+                    <button class="action-btn" onclick="startMathGame()">
+                        <span class="icon-box">🔢</span>
+                        <div>
+                            <span class="btn-title">Math Sprint</span>
+                            <span class="btn-subtitle">Logic & Mental Speed</span>
+                        </div>
+                    </button>
+
+                    <button class="action-btn" onclick="startWordGame()">
+                        <span class="icon-box">🧠</span>
+                        <div>
+                            <span class="btn-title">Word Decipher</span>
+                            <span class="btn-subtitle">Recall & Vocabulary</span>
+                        </div>
+                    </button>
+
+                    <button onclick="toggleLeaderboard()" style="margin-top: 1rem; background: transparent; border: none; color: #6366f1; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+                        📊 View Progress Logs
+                    </button>
+                </div>
+            </div>
+
+            <div id="game-screen" class="hidden">
+                <div id="game-content">
+                    </div>
+                <button onclick="exitGame()" style="margin-top: 1.5rem; background: transparent; border: none; color: #71717a; cursor: pointer; font-size: 0.8rem; letter-spacing: 1px; font-weight: 700; width: 100%;">
+                    EXIT WORKOUT
+                </button>
+            </div>
+
+            <div id="stats-screen" class="hidden">
+                <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Neural Progress</h2>
+                <div id="stats-list" style="max-height: 200px; overflow-y: auto; margin-bottom: 1.5rem;">
+                    </div>
+                <button class="submit-btn" onclick="exitGame()">Back to Modules</button>
+            </div>
+
+        </main>
+
+        <footer style="text-align: center; color: #3f3f46; font-size: 0.75rem; margin-top: 1rem;">
+            Cognitive Labs v1.0 • No-Login Mental Training
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
