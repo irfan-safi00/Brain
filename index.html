@@ -2,34 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>GHOST_PROTOCOL // Multiplayer Code</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Circuit - Brain Training</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="landing-ui">
-        <header>
-            <h1 class="glitch" data-text="GHOST_PROTOCOL">GHOST_PROTOCOL</h1>
-            <p>Static Multiplayer Coding Warfare</p>
-        </header>
+    <header>
+        <h1>Neural Circuit</h1>
+        <p>Connect the nodes to train your brain! Logic, memory, and speed required.</p>
+    </header>
 
-        <div class="lobby-cards">
-            <div class="card create">
-                <h3>NEW SQUAD</h3>
-                <button onclick="createRoom()" class="neon-btn blue">INITIALIZE CODE</button>
-            </div>
-            
-            <div class="card join">
-                <h3>JOIN SQUAD</h3>
-                <input type="text" id="joinInput" placeholder="SQUAD_CODE">
-                <button onclick="joinRoom()" class="neon-btn pink">CONNECT</button>
-            </div>
-        </div>
-        
-        <div class="coming-soon">
-            <p>NEXT MISSION: <span>BRIDGE_BUILDER</span> (Coming Soon)</p>
-        </div>
-    </div>
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app.js"></script>
-    <script src="logic.js"></script>
+    <main>
+        <section id="game-controls">
+            <div id="score-display">Score: <span id="score">0</span></div>
+            <div id="level-display">Level: <span id="level">1</span></div>
+            <div id="timer-display">Time: <span id="timer">30</span>s</div>
+            <button id="hint-btn" class="game-btn">Hint</button>
+            <button id="reset-btn" class="game-btn">Reset Level</button>
+        </section>
+
+        <section id="game-area">
+            <div id="game-grid" class="grid"></div>
+            <div id="message" class="hidden"></div>
+        </section>
+
+        <section id="mode-selection">
+            <h2>Game Modes</h2>
+            <button class="mode-btn" onclick="startGame('logic')">Logic Mode</button>
+            <button class="mode-btn" onclick="startGame('memory')">Memory Mode</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Neural Circuit. Built with HTML, CSS, and JavaScript.</p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
