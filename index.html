@@ -3,41 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neural Circuit - Brain Training</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <title>Neural Link: Logic Trainer</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Neural Circuit</h1>
-        <p>Connect the nodes to train your brain! Logic, memory, and speed required.</p>
-    </header>
+    <div class="game-container">
+        <header>
+            <h1>NEURAL<span>LINK</span></h1>
+            <div class="stats">
+                <div class="stat-box">LEVEL: <span id="level">1</span></div>
+                <div class="stat-box">SCORE: <span id="score">0</span></div>
+            </div>
+        </header>
 
-    <main>
-        <section id="game-controls">
-            <div id="score-display">Score: <span id="score">0</span></div>
-            <div id="level-display">Level: <span id="level">1</span></div>
-            <div id="timer-display">Time: <span id="timer">30</span>s</div>
-            <button id="hint-btn" class="game-btn">Hint</button>
-            <button id="reset-btn" class="game-btn">Reset Level</button>
-        </section>
+        <div class="grid" id="grid">
+            </div>
 
-        <section id="game-area">
-            <div id="game-grid" class="grid"></div>
-            <div id="message" class="hidden"></div>
-        </section>
-
-        <section id="mode-selection">
-            <h2>Game Modes</h2>
-            <button class="mode-btn" onclick="startGame('logic')">Logic Mode</button>
-            <button class="mode-btn" onclick="startGame('memory')">Memory Mode</button>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2025 Neural Circuit. Built with HTML, CSS, and JavaScript.</p>
-    </footer>
-
+        <div class="controls">
+            <button id="start-btn">INITIALIZE LINK</button>
+            <p id="message">Memorize the sequence to advance.</p>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
